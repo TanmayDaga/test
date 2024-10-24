@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import Footer from "./components/Footer";
+import Navbar from "./components/Header";
+import { AxiosContextProvider } from "@/context/AxiosContext";
+import { Toaster } from "@/components/ui/toaster";
+import { CloudProvider } from "./learn/components/cloud/useCloud";
+import { ConfigProvider } from "@/hooks/useConfig";
+import { ConnectionProvider } from "@/hooks/useConnection";
+import { ToastProvider } from "@radix-ui/react-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +37,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ToastProvider>
+          <ConnectionProvider>
+            <ConfigProvider>
+              <CloudProvider>
+                <AxiosContextProvider>
+                  <AuthProvider>
+                    <Navbar />
+                    {children}
+                    <Footer />
+                    <Toaster />
+                  </AuthProvider>
+                </AxiosContextProvider>
+              </CloudProvider>
+            </ConfigProvider>
+          </ConnectionProvider>
+        </ToastProvider>
       </body>
     </html>
   );
